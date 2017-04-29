@@ -1,0 +1,26 @@
+jenkinsdata:
+ build: jenkins-data
+
+jenkinsmaster:
+  build: jenkins-master
+  volumes_from:
+    - jenkinsdata
+  ports:
+    - "50000:50000"
+
+jenkinsnginx:
+  build: jenkins-nginx
+  ports:
+     - "80:80"
+  links:
+     - jenkinsmaster:jenkins-master
+       
+jenkinsdocker:
+  privileged: true
+  build: jenkins-docker
+  ports:
+     - "2375:2375"
+  links:
+     - jenkinsmaster:jenkins-master
+  volumes:
+     - /var/lib/riotdocker:/var/lib/docker
